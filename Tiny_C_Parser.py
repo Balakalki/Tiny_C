@@ -4,48 +4,52 @@ class parse(Parser):
     tokens = lex.tokens 
     literals = lex.literals
     memory = {}
+    var_list = []
     @_('return_type ID "(" ")" "{" statements "}" ')
     def program(self,value):
-        return value[5]
+        pass
     @_('INT')
     def return_type(self,value):
-        return value[0]
+        pass
     @_('statement ";" statements')
     def statements(self,value):
-        return value[2]
+        pass
     @_('statement ";"')
     def statements(self,value):
-        return value[0]
+        pass
     @_('declaration_stmt')
     def statement(self,value):
-        return value[0]
+        pass
     @_('assignment_stmt')
     def statement(self,value):
-        return value[0]
+        pass
     @_('print_stmt')
     def statement(self,value):
-        return value[0]
+        pass
     @_('type list_of_variables')
     def declaration_stmt(self,value):
-        return value[1]
+        pass
     @_('ID "," list_of_variables')
     def list_of_variables(self,value):
-        return value[0]
+        pass
     @_('ID')
     def list_of_variables(self,value):
-        return value[0]
+        if value[0] not in self.var_list:
+            self.var_list.append(value[0])
     @_('ID "=" ID')
     def assignment_stmt(self,value):
         self.memory[value[0]] = self.memory[value[2]]
     @_('ID "=" CONST')
     def assignment_stmt(self,value):
+        if value[0] not in self.var_list:
+            self.var_list.append(value[0])
         self.memory[value[0]] = value[2]
     @_('PRINT ID')
     def print_stmt(self,value):
         print(self.memory[value[1]])
     @_('INT')
     def type(self,value):
-        return value[0]
+        pass
     @_('CONST')
     def assignment_stmt(self,value):
         return int(value[0])
