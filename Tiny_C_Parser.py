@@ -54,10 +54,25 @@ lexer = lex()
 parser = parse()
 expr='''int main()
 { 
-    int a;
+    int vijay_08;
     b=40;
-    a=30; 
-    print a;
+    vijay_08=30; 
+    print vijay_08;
     print b;
 }'''
 parser.parse(lexer.tokenize(expr))
+
+#Level 1 grammer
+
+# <program>  :=  <return_type><identifier>() {  <statements> }
+# <return_type> :=  int
+# <statements> :=  <statement>; <statements> | <statement>;
+# <statement> := <declaration_stmt> |  <assignment_stmt> | <print_stmt>
+# <declaration_stmt> := <type> <list_of_variables>
+# <list_of_variables> := <identifier> , <list_of_variables> |  <identifier>
+# <assignment_stmt> := <identifier> = <identifier>  |  <identifier> = <constant>
+# <print_stmt>            :=  print <identifier>
+# <type>                     :=  int
+
+# <identifier>   rule is similar to C
+# <constant>  integer constant rule is similar to C
