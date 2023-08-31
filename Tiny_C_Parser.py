@@ -7,7 +7,7 @@ class parse(Parser):
     var_list = []
     @_('return_type ID "(" ")" "{" statements "}" ')
     def program(self,value):
-        pass
+        print("accepted")
     @_('INT')
     def return_type(self,value):
         pass
@@ -34,19 +34,16 @@ class parse(Parser):
         pass
     @_('ID')
     def list_of_variables(self,value):
-        if value[0] not in self.var_list:
-            self.var_list.append(value[0])
+        pass
     @_('ID "=" ID')
     def assignment_stmt(self,value):
-        self.memory[value[0]] = self.memory[value[2]]
+        pass
     @_('ID "=" CONST')
     def assignment_stmt(self,value):
-        if value[0] not in self.var_list:
-            self.var_list.append(value[0])
-        self.memory[value[0]] = value[2]
+        pass
     @_('PRINT ID')
     def print_stmt(self,value):
-        print(self.memory[value[1]])
+        pass
     @_('INT')
     def type(self,value):
         pass
