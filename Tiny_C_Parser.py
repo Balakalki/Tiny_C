@@ -1,68 +1,102 @@
 from sly import Parser
+from Ast import *
+from Function import *
+from Program import *
+from SymbolTable import *
 from Tiny_C_Lexer import lex
 class parse(Parser):
     tokens = lex.tokens 
     literals = lex.literals
-    memory = {}
-    var_list = []
+    stable=SymbolTable()
+    var_list=[]
+    dtype=None
+    lineNo=0
     @_('return_type ID "(" ")" "{" statements "}" ')
     def program(self,value):
-        print("accepted")
+        prog = Program()
+        fun = Function(value.return_type,value.ID)
+        fun.setStatementsAstList(value.statements)
+        fun.setLocalSymbolTable(self.stable.table)
+        prog.addFunctionDetails(value[1],fun)
+        if prog.getMainFunction() is None:
+            print("Error: main function is not defined")
+        return prog
     @_('INT')
     def return_type(self,value):
-        pass
+        return DataType.INT
     @_('statement ";" statements')
     def statements(self,value):
-        pass
+        self.lineNo+=1
+        return [value[0]] + value[2]
     @_('statement ";"')
     def statements(self,value):
-        pass
+        self.lineNo+=1
+        return [value[0]]
     @_('declaration_stmt')
     def statement(self,value):
-        pass
+        return value[0]
     @_('assignment_stmt')
     def statement(self,value):
-        pass
+        return value[0]
     @_('print_stmt')
     def statement(self,value):
-        pass
+        return value[0]
     @_('type list_of_variables')
     def declaration_stmt(self,value):
-        pass
+        lst=[]
+        for val in value[1]:
+            if self.stable.nameInSymbolTable(val)==False:
+                v =SymbolTableEntry(val,value[0])
+                lst.append(NameAst(v))
+                self.stable.addSymbol(v)
+            else:
+                print(f"Error: redeclaration of '{val}'")
+        return [value[0]]+lst
     @_('ID "," list_of_variables')
     def list_of_variables(self,value):
-        pass
+        self.lineNo+=1
+        return [value[0]] + value[2]
     @_('ID')
     def list_of_variables(self,value):
-        pass
+        return [value[0]]
     @_('ID "=" ID')
     def assignment_stmt(self,value):
-        pass
+        self.lineNo+=1
+        return AssignAst(value[0],value[2],self.lineNo)
     @_('ID "=" CONST')
     def assignment_stmt(self,value):
-        pass
+        self.lineNo+=1
+        for i in self.stable.table:
+            if i.name==value.ID:
+                i.value=value.CONST
+        return AssignAst(value.ID,value.CONST,self.lineNo)
     @_('PRINT ID')
     def print_stmt(self,value):
-        pass
+        self.lineNo+=1
+        for i in self.stable.table:
+            if i.name == value.ID:
+                return PrintAst(i)
     @_('INT')
     def type(self,value):
-        pass
+        return DataType.INT
     @_('CONST')
     def assignment_stmt(self,value):
-        return int(value[0])
+        value[0]=NumberAst(int(value[0]))
+        return NumberAst(int(value[0]))
     
 lexer = lex()
 parser = parse()
 expr='''int main()
 { 
-    int vijay_08;
+    int y;
+    int d,vijay_08,a,b,c;
     b=40;
     vijay_08=30; 
     print vijay_08;
-    print b;
+    print a;
 }'''
-parser.parse(lexer.tokenize(expr))
-
+obj = parser.parse(lexer.tokenize(expr))
+obj.print()
 #Level 1 grammer
 
 # <program>  :=  <return_type><identifier>() {  <statements> }
