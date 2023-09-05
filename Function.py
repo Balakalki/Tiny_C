@@ -21,10 +21,8 @@ class Function:
 				for j in statement:
 					if type(j)==DataType:
 						print("    ",j)
-					elif type(j)==NameAst:
+					else:
 						j.print()
-			elif type(statement) == AssignAst:
-				print("  statement:  ",statement.print())
-			elif type(statement) == PrintAst:
+			else:
 				statement.print()
 	
