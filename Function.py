@@ -1,5 +1,5 @@
 from Ast import *
-from SymbolTable import SymbolTable
+from SymbolTable import *
 class Function:
 	def __init__(self, returnType, name):
 		self.returnType = returnType
