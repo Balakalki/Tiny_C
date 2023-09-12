@@ -2,7 +2,7 @@ from sly import Lexer
 
 class lex(Lexer):
     literals = {";","=","\n","==","+","-","*","/","%","!",",","(",")","{","}","[","]","<",">","."}
-    ignore = " \n\t"
+    ignore = " \t"
     tokens = {"ID","INT","PRINT","CONST"}
     CONST = r'[0-9]+'
     ID = r'[a-zA-Z][a-zA-Z_0-9]*'
@@ -11,6 +11,14 @@ class lex(Lexer):
     def CONST(self,t):
         t.value=int(t.value)
         return t
+    @_(r'\n+')
+    def ignore_newline(self, t):
+        self.lineno += t.value.count('\n')
+
+    def error(self, t):
+        print('Line %d: Bad character %r' % (self.lineno, t.value[0]))
+        self.index += 1
+
 
 
 # Level1  of Tiny C:
