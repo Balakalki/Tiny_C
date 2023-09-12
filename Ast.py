@@ -21,7 +21,8 @@ class NumberAst(AST):
 	def __init__(self, number):
 		self.value = number
 	def print(self):
-		print("  ",self.value)
+		print(f"Num:{self.value}",end="")
+		# print("  ",self.value)
 	def getDataType(self):
 		return type(self.value)
 	def typeCheckAST(self):
@@ -32,9 +33,9 @@ class NameAst(AST):
 	def __init__(self, symbolEntry):
 		self.symbolEntry = symbolEntry
 	def print(self):
-		self.symbolEntry.print()
+		print("Name:",self.symbolEntry,end="")
 	def getDataType(self):
-		return self.symbolEntry.getDataType()
+		return SymbolTable.getSymbolEntry(self.symbolEntry).getDataType()
 	def typeCheckAST(self):
 		pass
 class AssignAst(AST):
@@ -50,13 +51,26 @@ class AssignAst(AST):
 		else:
 			return False
 	def print(self):
-		return f"Assignment: {self.left} = {self.right} (Line {self.lineNo})"
+		print("\t\tAssign:")
+		print("\t\t\tLHS (",end="")
+		self.left.print()
+		print(")")
+		# print(SymbolTable.getSymbolEntry(self.left.symbolEntry).name,"  )")
+		print("\t\t\tRHS (",end="")
+		self.right.print()
+		print(")")
+		
+		# return f"Assignment: {self.left} = {self.right} (Line {self.lineNo})"
 	
 class PrintAst(AST):
 	def __init__(self,symbolEntry):
 		self.symbolEntry= symbolEntry
 	def print(self):
+		print("\t\tPrint: ")
+		print(f"\t\t\t",end="")
 		self.symbolEntry.print()
+		print()
+		# self.symbolEntry.print()
 	def getDataType(self):
 		pass
 	def typeCheckAST(self):

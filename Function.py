@@ -15,14 +15,11 @@ class Function:
 	def getLocalSymbolTable(self):
 		return self.localSymbolTable
 	def print(self):
-		print(f"function name: {self.name} function return type: {self.returnType} body:")
+		print(f"\tProcedure: {self.name}   Return type: {self.returnType}")
+		# for statement in self.getStatementsAstList():
+		# 	statement.print()
+		# print(self.statementsAstList)
 		for statement in self.getStatementsAstList():
-			if type(statement)==list:
-				for j in statement:
-					if type(j)==DataType:
-						print("    ",j)
-					else:
-						j.print()
-			else:
+			if statement is not None:
 				statement.print()
 	

@@ -23,6 +23,10 @@ class SymbolTable:
 			if symb.getSymbolName()==name:
 				return True
 		return False
+	def getSymbolEntry(self,name):
+		for i in self.table:
+			if i.name==name:
+				return i
 	def printSymbolTable(self):
 		for i in self.table:
 			i.print()

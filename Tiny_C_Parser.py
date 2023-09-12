@@ -8,9 +8,6 @@ class parse(Parser):
     tokens = lex.tokens 
     literals = lex.literals
     stable=SymbolTable()
-    var_list=[]
-    dtype=None
-    lineNo=0
     @_('return_type ID "(" ")" "{" statements "}" ')
     def program(self,value):
         prog = Program()
@@ -23,59 +20,50 @@ class parse(Parser):
         return prog
     @_('INT')
     def return_type(self,value):
-        return DataType.INT
+        return value[0]
     @_('statement ";" statements')
     def statements(self,value):
-        self.lineNo+=1
         return [value[0]] + value[2]
     @_('statement ";"')
     def statements(self,value):
-        self.lineNo+=1
         return [value[0]]
-    @_('declaration_stmt')
-    def statement(self,value):
-        return value[0]
-    @_('assignment_stmt')
-    def statement(self,value):
-        return value[0]
-    @_('print_stmt')
+    @_('declaration_stmt','assignment_stmt','print_stmt')
     def statement(self,value):
         return value[0]
     @_('type list_of_variables')
     def declaration_stmt(self,value):
-        lst=[]
         for val in value[1]:
-            if self.stable.nameInSymbolTable(val)==False:
-                v =SymbolTableEntry(val,value[0])
-                lst.append(NameAst(v))
+            if self.stable.nameInSymbolTable(val.symbolEntry)==False:
+                v =SymbolTableEntry(val.symbolEntry,value[0])
+                # lst.append(NameAst(v))
+                # self.stable.addSymbol(v)
                 self.stable.addSymbol(v)
             else:
-                print(f"Error: redeclaration of '{val}'")
-        return [value[0]]+lst
+                print(f"Error: redeclaration of '{val.symbolEntry}'")
     @_('ID "," list_of_variables')
     def list_of_variables(self,value):
-        self.lineNo+=1
-        return [value[0]] + value[2]
+        return [NameAst(value[0])] + value[2]
     @_('ID')
     def list_of_variables(self,value):
-        return [value[0]]
+        return [NameAst(value[0])]
     @_('ID "=" ID')
     def assignment_stmt(self,value):
-        self.lineNo+=1
-        return AssignAst(value[0],value[2],self.lineNo)
+        symentry=self.stable.getSymbolEntry(value[0])
+        left=NameAst(symentry.name)
+        symentry=self.stable.getSymbolEntry(value[2])
+        right=NameAst(symentry.name)
+        return AssignAst(left,right,0)
     @_('ID "=" CONST')
     def assignment_stmt(self,value):
-        self.lineNo+=1
-        for i in self.stable.table:
-            if i.name==value.ID:
-                i.value=value.CONST
-        return AssignAst(value.ID,value.CONST,self.lineNo)
+        symentry=self.stable.getSymbolEntry(value[0])
+        left=NameAst(symentry.name)
+        return AssignAst(left,NumberAst(value[2]),0)
     @_('PRINT ID')
     def print_stmt(self,value):
-        self.lineNo+=1
-        for i in self.stable.table:
-            if i.name == value.ID:
-                return PrintAst(i)
+        return PrintAst(NameAst(value[1]))
+        # for i in self.stable.table:
+        #     if i.name == value.ID:
+        #         return PrintAst(i)
     @_('INT')
     def type(self,value):
         return DataType.INT

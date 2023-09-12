@@ -1,13 +1,17 @@
 from sly import Lexer
 
 class lex(Lexer):
-    literals = (";","=","\n","==","+","-","*","/","%","!",",","(",")","{","}","[","]","<",">",".")
-    ignore = " \n"
-    tokens = ("ID","INT","PRINT","CONST")
+    literals = {";","=","\n","==","+","-","*","/","%","!",",","(",")","{","}","[","]","<",">","."}
+    ignore = " \n\t"
+    tokens = {"ID","INT","PRINT","CONST"}
     CONST = r'[0-9]+'
     ID = r'[a-zA-Z][a-zA-Z_0-9]*'
     ID ['print'] = PRINT 
     ID ['int'] = INT
+    def CONST(self,t):
+        t.value=int(t.value)
+        return t
+
 
 # Level1  of Tiny C:
 
