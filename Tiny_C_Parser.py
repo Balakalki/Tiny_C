@@ -48,16 +48,18 @@ class parse(Parser):
         return [NameAst(value[0])]
     @_('ID "=" ID')
     def assignment_stmt(self,value):
+
+        print(value.lineno)
         symentry=self.stable.getSymbolEntry(value[0])
         left=NameAst(symentry.name)
         symentry=self.stable.getSymbolEntry(value[2])
         right=NameAst(symentry.name)
-        return AssignAst(left,right,0)
+        return AssignAst(left,right,value.lineno)
     @_('ID "=" CONST')
     def assignment_stmt(self,value):
         symentry=self.stable.getSymbolEntry(value[0])
         left=NameAst(symentry.name)
-        return AssignAst(left,NumberAst(value[2]),0)
+        return AssignAst(left,NumberAst(value[2]),value.lineno)
     @_('PRINT ID')
     def print_stmt(self,value):
         return PrintAst(NameAst(value[1]))
@@ -79,7 +81,7 @@ expr='''int main()
     int y;
     int d,vijay_08,a,b,c;
     b=40;
-    vijay_08=30; 
+    vijay_08=b; 
     print vijay_08;
     print a;
 }'''
