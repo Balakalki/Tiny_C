@@ -75,6 +75,90 @@ class PrintAst(AST):
 		pass
 	def typeCheckAST(self):
 		pass
-
+class PlusAst(AST):
+	def __init__(self,left,right,lineNo):
+		self.left=left
+		self.right=right
+		self.lineNo=lineNo
+	def print(self):
+		print("Plus:")
+		print("\t\t\t\tLHS (",end="")
+		self.left.print()
+		print(")")
+		# print(SymbolTable.getSymbolEntry(self.left.symbolEntry).name,"  )")
+		print("\t\t\t\tRHS (",end="")
+		self.right.print()
+		print(")",end= "")
+	def getDataType(self):
+		pass
+	def typeCheckAST(self):
+		if(self.left.getDataType()==self.right.getDataType):
+			return True
+		else:
+			return False
+class MinusAst(AST):
+	def __init__(self,left,right,lineNo):
+		self.left=left
+		self.right=right
+		self.lineNo=lineNo
+	def print(self):
+		print("Minus:")
+		print("\t\t\t\tLHS (",end="")
+		self.left.print()
+		print(")")
+		# print(SymbolTable.getSymbolEntry(self.left.symbolEntry).name,"  )")
+		print("\t\t\t\tRHS (",end="")
+		self.right.print()
+		print(")",end= "")
+	def getDataType(self):
+		pass
+	def typeCheckAST(self):
+		if(self.left.getDataType()==self.right.getDataType):
+			return True
+		else:
+			return False
+class MultAst(AST):
+	def __init__(self,left,right,lineNo):
+		self.left=left
+		self.right=right
+		self.lineNo=lineNo
+	def print(self):
+		print("Mult:")
+		print("\t\t\t\tLHS (",end="")
+		self.left.print()
+		print(")")
+		# print(SymbolTable.getSymbolEntry(self.left.symbolEntry).name,"  )")
+		print("\t\t\t\tRHS (",end="")
+		self.right.print()
+		print(")",end= "")
+	def getDataType(self):
+		pass
+	def typeCheckAST(self):
+		if(self.left.getDataType()==self.right.getDataType):
+			return True
+		else:
+			return False
+class DivAst(AST):
+	def __init__(self,left,right,lineNo):
+		self.left=left
+		self.right=right
+		self.lineNo=lineNo
+	def print(self):
+		print("Div:")
+		print("\t\t\t\tLHS (",end="")
+		self.left.print()
+		print(")")
+		# print(SymbolTable.getSymbolEntry(self.left.symbolEntry).name,"  )")
+		print("\t\t\t\tRHS (",end="")
+		self.right.print()
+		print(")",end= "")
+	def getDataType(self):
+		pass
+	def typeCheckAST(self):
+		if(self.left.getDataType()==self.right.getDataType):
+			return True
+		else:
+			return False
+			
 
 

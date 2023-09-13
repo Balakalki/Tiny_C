@@ -8,6 +8,7 @@ class parse(Parser):
     tokens = lex.tokens 
     literals = lex.literals
     stable=SymbolTable()
+    precedence = (('left','='),('left','+','-'),('left','*','/'))
     @_('return_type ID "(" ")" "{" statements "}" ')
     def program(self,value):
         prog = Program()
@@ -27,7 +28,7 @@ class parse(Parser):
     @_('statement ";"')
     def statements(self,value):
         return [value[0]]
-    @_('declaration_stmt','assignment_stmt','print_stmt')
+    @_('declaration_stmt','assignment_stmt','print_stmt','expr')
     def statement(self,value):
         return value[0]
     @_('type list_of_variables')
@@ -35,8 +36,6 @@ class parse(Parser):
         for val in value[1]:
             if self.stable.nameInSymbolTable(val.symbolEntry)==False:
                 v =SymbolTableEntry(val.symbolEntry,value[0])
-                # lst.append(NameAst(v))
-                # self.stable.addSymbol(v)
                 self.stable.addSymbol(v)
             else:
                 print(f"Error: redeclaration of '{val.symbolEntry}'")
@@ -46,33 +45,49 @@ class parse(Parser):
     @_('ID')
     def list_of_variables(self,value):
         return [NameAst(value[0])]
-    @_('ID "=" ID')
-    def assignment_stmt(self,value):
-
-        print(value.lineno)
-        symentry=self.stable.getSymbolEntry(value[0])
-        left=NameAst(symentry.name)
-        symentry=self.stable.getSymbolEntry(value[2])
-        right=NameAst(symentry.name)
-        return AssignAst(left,right,value.lineno)
-    @_('ID "=" CONST')
+    # @_('ID "=" ID')
+    # def assignment_stmt(self,value):
+    #     symentry=self.stable.getSymbolEntry(value[0])
+    #     left=NameAst(symentry.name)
+    #     symentry=self.stable.getSymbolEntry(value[2])
+    #     right=NameAst(symentry.name)
+    #     return AssignAst(left,right,value.lineno)
+    @_('ID "=" expr')
     def assignment_stmt(self,value):
         symentry=self.stable.getSymbolEntry(value[0])
-        left=NameAst(symentry.name)
-        return AssignAst(left,NumberAst(value[2]),value.lineno)
+        if symentry is not None:
+            left=NameAst(symentry.name)
+        else:
+            print(f"Erro: {value[0]} is not declared at line {value.lineno}")
+            left=NameAst(value[0])
+        return AssignAst(left,value[2],value.lineno)
+    @_('expr "+" expr')
+    def expr(self,value):
+        return PlusAst(value[0],value[2],value.lineno)
+    @_('expr "-" expr')
+    def expr(self,value):
+        return MinusAst(value[0],value[2],value.lineno)
+    @_('expr "*" expr')
+    def expr(self,value):
+        return MultAst(value[0],value[2],value.lineno)
+    @_('expr "/" expr')
+    def expr(self,value):
+        return DivAst(value[0],value[2],value.lineno)
+     
+    @_('ID')
+    def expr(self,value):
+        v=self.stable.getSymbolEntry(value.ID)
+        return NameAst(v.name)
+    @_('CONST')
+    def expr(self,value):
+        return NumberAst(value[0])
     @_('PRINT ID')
     def print_stmt(self,value):
         return PrintAst(NameAst(value[1]))
-        # for i in self.stable.table:
-        #     if i.name == value.ID:
-        #         return PrintAst(i)
     @_('INT')
     def type(self,value):
         return DataType.INT
-    @_('CONST')
-    def assignment_stmt(self,value):
-        value[0]=NumberAst(int(value[0]))
-        return NumberAst(int(value[0]))
+    
     
 lexer = lex()
 parser = parse()
@@ -80,8 +95,10 @@ expr='''int main()
 { 
     int y;
     int d,vijay_08,a,b,c;
-    b=40;
-    vijay_08=b; 
+    vijay_08=b+10; 
+    a=b*c;
+    b=a/c;
+    d=a-b;
     print vijay_08;
     print a;
 }'''
@@ -92,7 +109,8 @@ obj.print()
 # <program>  :=  <return_type><identifier>() {  <statements> }
 # <return_type> :=  int
 # <statements> :=  <statement>; <statements> | <statement>;
-# <statement> := <declaration_stmt> |  <assignment_stmt> | <print_stmt>
+# <statement> := <declaration_stmt> |  <assignment_stmt> | <print_stmt> | expr
+# <expr> := <expr> + <expr> | <expr> - <expr> | <expr> * <expr> | <expr> / <expr> | <constant>
 # <declaration_stmt> := <type> <list_of_variables>
 # <list_of_variables> := <identifier> , <list_of_variables> |  <identifier>
 # <assignment_stmt> := <identifier> = <identifier>  |  <identifier> = <constant>
