@@ -1,0 +1,13 @@
+int main()
+{ 
+    int d,vijay_08,a,b,c;
+    int d;
+    b=10;
+    a=b;
+    vijay_08=b+c; 
+    y=b*c;
+    b=a/c;
+    d=a-b;
+    print vijay_08;
+    print a;
+}

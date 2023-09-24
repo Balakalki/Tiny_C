@@ -3,13 +3,18 @@ from sly import Lexer
 class lex(Lexer):
     literals = {";","=","\n","==","+","-","*","/","%","!",",","(",")","{","}","[","]","<",">","."}
     ignore = " \t"
-    tokens = {"ID","INT","PRINT","CONST"}
+    tokens = {"ID","INT","PRINT","CONST","DOUBLE","FLOAT"}
     CONST = r'[0-9]+'
     ID = r'[a-zA-Z][a-zA-Z_0-9]*'
     ID ['print'] = PRINT 
     ID ['int'] = INT
+    ID ['double'] = DOUBLE
+    FLOAT = r'[0-9]+.[0-9][0-9]'
     def CONST(self,t):
         t.value=int(t.value)
+        return t
+    def FLOAT(self,t):
+        t.value=float(t.value)
         return t
     @_(r'\n+')
     def ignore_newline(self, t):

@@ -3,8 +3,7 @@ from enum import Enum
 from abc import *
 from SymbolTable import SymbolTable
 from SymbolTable import SymbolTableEntry
-
-DataType = Enum('DataType',['INT','DOUBLE'])
+from SymbolTable import DataType
 
 class AST(metaclass=ABCMeta):
 	@abstractmethod
@@ -23,18 +22,22 @@ class NumberAst(AST):
 	def print(self):
 		print(f"Num:{self.value}",end="")
 	def getDataType(self):
-		return type(self.value)
+		if type(self.value)==int:
+			return DataType.INT
+		elif type(self.value) == float:
+			return DataType.DOUBLE
 	def typeCheckAST(self):
 		pass
 
 
 class NameAst(AST):
-	def __init__(self, symbolEntry):
+	def __init__(self, symbolEntry,symbolTable):
 		self.symbolEntry = symbolEntry
+		self.symbolTable = symbolTable
 	def print(self):
 		print("Name:",self.symbolEntry,end="")
 	def getDataType(self):
-		return SymbolTable.getSymbolEntry(self.symbolEntry).getDataType()
+		return self.symbolTable.getSymbolEntry(self.symbolEntry).getDataType()
 	def typeCheckAST(self):
 		pass
 class AssignAst(AST):
@@ -45,7 +48,7 @@ class AssignAst(AST):
 	def getDataType(self):
 		pass
 	def typeCheckAST(self):
-		if(self.left.getDataType()== self.right.getDataType()):
+		if(self.left.getDataType() == self.right.getDataType()):
 			return True
 		else:
 			return False
@@ -132,9 +135,10 @@ class PlusAst(AST):
 		self.right.print()
 		print(")",end= "")
 	def getDataType(self):
-		pass
+		if self.typeCheckAST() == True:
+			return self.left.getDataType()
 	def typeCheckAST(self):
-		if(self.left.getDataType()==self.right.getDataType):
+		if(self.left.getDataType()==self.right.getDataType()):
 			return True
 		else:
 			return False
@@ -152,9 +156,10 @@ class MinusAst(AST):
 		self.right.print()
 		print(")",end= "")
 	def getDataType(self):
-		pass
+		if self.typeCheckAST()==True:
+			return self.left.getDataType()
 	def typeCheckAST(self):
-		if(self.left.getDataType()==self.right.getDataType):
+		if(self.left.getDataType()==self.right.getDataType()):
 			return True
 		else:
 			return False
@@ -172,9 +177,10 @@ class MultAst(AST):
 		self.right.print()
 		print(")",end= "")
 	def getDataType(self):
-		pass
+		if self.typeCheckAST()==True:
+			return self.left.getDataType()
 	def typeCheckAST(self):
-		if(self.left.getDataType()==self.right.getDataType):
+		if(self.left.getDataType()==self.right.getDataType()):
 			return True
 		else:
 			return False
@@ -192,9 +198,10 @@ class DivAst(AST):
 		self.right.print()
 		print(")",end= "")
 	def getDataType(self):
-		pass
+		if self.typeCheckAST()==True:
+			return self.left.getDataType()
 	def typeCheckAST(self):
-		if(self.left.getDataType()==self.right.getDataType):
+		if(self.left.getDataType()==self.right.getDataType()):
 			return True
 		else:
 			return False
@@ -212,9 +219,10 @@ class LessthanAst:
 		self.right.print()
 		print(")")
 	def getDataType(self):
-		pass
+		if self.typeCheckAST()==True:
+			return self.left.getDataType()
 	def typeCheckAST(self):
-		if(self.left.getDataType()==self.right.getDataType):
+		if(self.left.getDataType()==self.right.getDataType()):
 			return True
 		else:
 			return False
@@ -232,9 +240,10 @@ class GreaterthanAst:
 		self.right.print()
 		print(")")
 	def getDataType(self):
-		pass
+		if self.typeCheckAST()==True:
+			return self.left.getDataType()
 	def typeCheckAST(self):
-		if(self.left.getDataType()==self.right.getDataType):
+		if(self.left.getDataType()==self.right.getDataType()):
 			return True
 		else:
 			return False
