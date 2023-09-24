@@ -22,7 +22,6 @@ class NumberAst(AST):
 		self.value = number
 	def print(self):
 		print(f"Num:{self.value}",end="")
-		# print("  ",self.value)
 	def getDataType(self):
 		return type(self.value)
 	def typeCheckAST(self):
@@ -55,12 +54,9 @@ class AssignAst(AST):
 		print("\t\t\tLHS (",end="")
 		self.left.print()
 		print(")")
-		# print(SymbolTable.getSymbolEntry(self.left.symbolEntry).name,"  )")
 		print("\t\t\tRHS (",end="")
 		self.right.print()
 		print(")")
-		
-		# return f"Assignment: {self.left} = {self.right} (Line {self.lineNo})"
 	
 class PrintAst(AST):
 	def __init__(self,symbolEntry):
@@ -70,11 +66,58 @@ class PrintAst(AST):
 		print(f"\t\t\t",end="")
 		self.symbolEntry.print()
 		print()
-		# self.symbolEntry.print()
 	def getDataType(self):
 		pass
 	def typeCheckAST(self):
 		pass
+# class ArthimaticAst(AST):
+# 	def __init__(self,left,right,oparator,lineno):
+# 		self.left=left
+# 		self.right=right
+# 		self.oparator=oparator
+# 		self.lineno=lineno
+# 	def print(self):
+# 		print("Arithmatic:")
+# 		print("\t\t\t\tLHS (",end="")
+# 		self.left.print()
+# 		print(")")
+# 		print("\t\t\t\toparator (",end="")
+# 		print(self.oparator,end="")
+# 		print(")")
+# 		print("\t\t\t\tRHS (",end="")
+# 		self.right.print()
+# 		print(")",end= "")
+# 	def getDataType(self):
+# 		pass
+# 	def typeCheckAST(self):
+# 		if(self.left.getDataType() == self.right.getDataType()):
+# 			return True
+# 		else:
+# 			return False
+# class RelationAst(AST):
+# 	def __init__(self,left,right,relation,lineno):
+# 		self.left=left
+# 		self.right=right
+# 		self.relation=relation
+# 		self.lineno=lineno
+# 	def print(self):
+# 		print("relation:")
+# 		print("\t\t\t\tLHS (",end="")
+# 		self.left.print()
+# 		print(")")
+# 		print("\t\t\t\trelation (",end="")
+# 		print(self.oparator,end="")
+# 		print(")")
+# 		print("\t\t\t\tRHS (",end="")
+# 		self.right.print()
+# 		print(")",end= "")
+# 	def getDataType(self):
+# 		pass
+# 	def typeCheckAST(self):
+# 		if(self.left.getDataType() == self.right.getDataType()):
+# 			return True
+# 		else:
+# 			return False
 class PlusAst(AST):
 	def __init__(self,left,right,lineNo):
 		self.left=left
@@ -85,7 +128,6 @@ class PlusAst(AST):
 		print("\t\t\t\tLHS (",end="")
 		self.left.print()
 		print(")")
-		# print(SymbolTable.getSymbolEntry(self.left.symbolEntry).name,"  )")
 		print("\t\t\t\tRHS (",end="")
 		self.right.print()
 		print(")",end= "")
@@ -106,7 +148,6 @@ class MinusAst(AST):
 		print("\t\t\t\tLHS (",end="")
 		self.left.print()
 		print(")")
-		# print(SymbolTable.getSymbolEntry(self.left.symbolEntry).name,"  )")
 		print("\t\t\t\tRHS (",end="")
 		self.right.print()
 		print(")",end= "")
@@ -127,7 +168,6 @@ class MultAst(AST):
 		print("\t\t\t\tLHS (",end="")
 		self.left.print()
 		print(")")
-		# print(SymbolTable.getSymbolEntry(self.left.symbolEntry).name,"  )")
 		print("\t\t\t\tRHS (",end="")
 		self.right.print()
 		print(")",end= "")
@@ -148,7 +188,6 @@ class DivAst(AST):
 		print("\t\t\t\tLHS (",end="")
 		self.left.print()
 		print(")")
-		# print(SymbolTable.getSymbolEntry(self.left.symbolEntry).name,"  )")
 		print("\t\t\t\tRHS (",end="")
 		self.right.print()
 		print(")",end= "")
@@ -159,6 +198,43 @@ class DivAst(AST):
 			return True
 		else:
 			return False
-			
-
-
+class LessthanAst:
+	def __init__(self,left,right,lineNo):
+		self.left=left
+		self.right=right
+		self.lineNo=lineNo
+	def print(self):
+		print("\t\tLessthan:")
+		print("\t\t\tLHS (",end="")
+		self.left.print()
+		print(")")
+		print("\t\t\tRHS (",end="")
+		self.right.print()
+		print(")")
+	def getDataType(self):
+		pass
+	def typeCheckAST(self):
+		if(self.left.getDataType()==self.right.getDataType):
+			return True
+		else:
+			return False
+class GreaterthanAst:
+	def __init__(self,left,right,lineNo):
+		self.left=left
+		self.right=right
+		self.lineNo=lineNo
+	def print(self):
+		print("\t\tGreaterthan:")
+		print("\t\t\tLHS (",end="")
+		self.left.print()
+		print(")")
+		print("\t\t\tRHS (",end="")
+		self.right.print()
+		print(")")
+	def getDataType(self):
+		pass
+	def typeCheckAST(self):
+		if(self.left.getDataType()==self.right.getDataType):
+			return True
+		else:
+			return False
